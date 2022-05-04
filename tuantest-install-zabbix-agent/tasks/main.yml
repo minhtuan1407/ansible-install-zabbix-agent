@@ -1,0 +1,9 @@
+---
+# tasks file for ansible-install-zabbix-agent
+- include: install-zabbix-agent.yml
+  tags:
+    - install-zabbix-agent
+- include: copy-config-file.yml
+  tags:
+    - copy-config-file
+...

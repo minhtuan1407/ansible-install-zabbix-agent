@@ -1,0 +1,7 @@
+---
+- hosts: "{{hostname}}"
+  gather_facts: yes
+  become: yes
+  roles:
+  - role: tuantest-install-zabbix-agent
+...

@@ -1,0 +1,63 @@
+---
+- name: Download zabbix deb file for Debian 10
+  get_url:
+    url: "https://repo.zabbix.com/zabbix/4.5/debian/pool/main/z/zabbix-release/zabbix-release_4.5-1+buster_all.deb"
+    dest: "/tmp/zabbix-release_4.5-1+buster_all.deb"
+  when: ansible_distribution_release == 'buster'
+- name: Install zabbix deb in Debian 10
+  apt: deb="/tmp/zabbix-release_4.5-1+buster_all.deb"
+  when: ansible_distribution_release == 'buster'
+- name: Install zabbix-agent 4.5 Debian 10
+  apt:
+    name: zabbix-agent
+    state: latest
+    update_cache: yes
+  ignore_errors: yes
+  when: ansible_distribution_release == 'buster'
+- name: Download zabbix deb file for Debian 9
+  get_url:
+    url: "https://repo.zabbix.com/zabbix/4.5/debian/pool/main/z/zabbix-release/zabbix-release_4.5-1+stretch_all.deb"
+    dest: "/tmp/zabbix-release_4.5-1+stretch_all.deb"
+  when: ansible_distribution_release == 'stretch'
+- name: Install zabbix deb in Debian 9
+  apt: deb="/tmp/zabbix-release_4.5-1+stretch_all.deb"
+  when: ansible_distribution_release == 'stretch'
+- name: Install zabbix-agent 4.5 Debian 9
+  apt:
+    name: zabbix-agent
+    state: latest
+    update_cache: yes
+  ignore_errors: yes
+  when: ansible_distribution_release == 'stretch'
+- name: Disable SELinux
+  selinux:
+    state: disabled
+  when: ansible_distribution == 'CentOS'
+- name: Install zabbix CentOS 7 rpm file
+  yum:
+    name: "https://repo.zabbix.com/zabbix/4.5/rhel/7/x86_64/zabbix-release-4.5-1.el7.noarch.rpm"
+    state: present
+  ignore_errors: yes
+  when: ansible_distribution == 'CentOS'
+- name: Install zabbix-agent for CentOS 7
+  yum:
+    name: zabbix-agent
+    enablerepo: zabbix
+    update_cache: true
+    state: latest
+  when: ansible_distribution == 'CentOS'
+- name: Create directory log zabbix-agent for CentOS 7
+  file:
+    path: /var/log/zabbix-agent/
+    state: directory
+    owner: zabbix
+    group: zabbix
+    mode: '0755'
+- name: Create file log zabbix-agent for CentOS 7
+  file:
+    path: /var/log/zabbix-agent/zabbix_agentd.log
+    state: touch
+    owner: zabbix
+    group: zabbix
+    mode: '0755'
+...
